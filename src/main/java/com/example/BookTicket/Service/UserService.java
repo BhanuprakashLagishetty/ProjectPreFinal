@@ -29,7 +29,11 @@ public class UserService implements UserServiceInterface {
     private AllConversions convert;
 
     @Autowired
+    private Station_Repo stationRepo;
+
+    @Autowired
     private user_Repo userRepo;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -76,6 +80,31 @@ public class UserService implements UserServiceInterface {
         return price;
     }
 
+    public void displayHighestUserTicketsForTrain()
+    {
+        Map<User,Integer>heighestuser=new HashMap<>();
+        Train train=trainRepo.findById((long)1).orElse(null);
+
+              train.getBookings().forEach(booking -> heighestuser.put(booking.getUser(),heighestuser.getOrDefault(booking.getUser(),0)+booking.getNumerOfSeats()));
+              int maxnum=heighestuser.values().stream().max(Integer::compareTo).orElse(0);
+              List<User>users=heighestuser.keySet().stream().filter(key->heighestuser.get(key)==maxnum).collect(Collectors.toList());
+        int count=0;
+        for(User user :users)
+        {
+            for(Booking booking:user.getBooking())
+            {
+                count+=booking.getNumerOfSeats();
+                System.out.println("Booked date is"+booking.getBookedDate());
+                System.out.println("Booked number of seats"+b);
+            }
+            System.out.println("username is:  "+user.getUsername() +"train name is"+train.getName()+ "arival time is"+train.getArrivalStation()+" destination time is"+train.getDepartureStation()+ "arrival time is"+train.getArrivalTime()+" departure time is"+train.getDepartureTime()+"Booked seat is"+ count +"Booked times"+user.getBooking().size());
+
+        }
+             int cout=0;
+
+
+
+    }
     @Override
     public BookingModel createBookingModel(BookingModel bookingModel, int numberOfSeats, double price, PriceGenerationModel priceGenerationModel) {
         bookingModel.setNumerOfSeats(numberOfSeats);
@@ -115,6 +144,7 @@ public class UserService implements UserServiceInterface {
     @Override
     public BookingModel convertseatNumbersToBookingModel(Set<String> selectedSeatNumbers, Long user_Id, Long Train_Id, PriceGenerationModel priceGenerationModel, LocalDate bookedDate) {
         Set<Seat> seatSet = new HashSet<>();
+        Train train=trainRepo.findById(Train_Id).get();
         User user = userRepo.findById(user_Id).orElse(null);
         selectedSeatNumbers.forEach((e) -> {
             long number = Long.parseLong(e);
@@ -129,6 +159,7 @@ public class UserService implements UserServiceInterface {
         LocalDateTime currentDateTime = LocalDateTime.now();
         bookingModel.setBookingTime(currentDateTime);
         bookingModel.setBookingType("normal");
+        bookingModel.setTrain(train);
         return bookingTickets(bookingModel, user_Id, Train_Id, priceGenerationModel);
 
     }
@@ -385,8 +416,10 @@ public class UserService implements UserServiceInterface {
         // Get all trains
         List<Train> trainsList = trainRepo.findAll();
 
+        displayHighestUserTicketsForTrain();
         // Filter and process trains
-        return trainsList.stream()
+
+            return trainsList.stream()
                 // Converting each Train object to TrainModel
                 .map(convert::trainToTrainModel)
                 // Filter trains based on stations
@@ -398,6 +431,8 @@ public class UserService implements UserServiceInterface {
                 .collect(Collectors.toList());
     }
 
+
+
     private void checkThatkal(TrainModel trainModel) {
         LocalTime trainArivalTime = trainModel.getArrivalTime();
         Duration duration = Duration.ofHours(6);
@@ -405,7 +440,6 @@ public class UserService implements UserServiceInterface {
         // Calculate the time 6 hours before the current local date and time
         LocalTime sixHoursBefore = trainArivalTime.minus(duration);
         if (sixHoursBefore.isBefore(currentTime) && (trainModel.getThathakalAddedDate() == null || !trainModel.getThathakalAddedDate().equals(LocalDate.now()))) {
-            System.out.println("Thiis is bhanuprakash");
             addingThatkalTickets(trainModel);
         }
 

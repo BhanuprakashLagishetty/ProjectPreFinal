@@ -28,6 +28,7 @@ public class AllConversions {
         booking.setPayment(bookingModel.getPayment());
         booking.setPrice(bookingModel.getPrice());
         booking.setSeats(bookingModel.getSeats());
+        booking.setTrain(bookingModel.getTrain());
         booking.setWaitingLists(bookingModel.getWaitingLists());
         return booking;
 
@@ -103,6 +104,7 @@ public class AllConversions {
         bookingModel.setPayment(booking.getPayment());
         bookingModel.setBookingTime(booking.getBookingTime());
         bookingModel.setWaitingLists(booking.getWaitingLists());
+        bookingModel.setTrain(booking.getTrain());
 
         return bookingModel;
 

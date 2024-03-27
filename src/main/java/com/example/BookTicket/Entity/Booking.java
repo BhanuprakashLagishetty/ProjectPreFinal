@@ -1,5 +1,6 @@
 package com.example.BookTicket.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,7 +34,10 @@ public class Booking {
     private String bookingType;
     @OneToMany(mappedBy = "bookingSeats", cascade = CascadeType.MERGE)
     private Set<Seat>seats = new HashSet<>();
-
+    @ManyToOne
+    @JoinColumn(name = "train_id")
+    @JsonIgnore
+    private Train train;
 
     @OneToMany(mappedBy = "bookingSeats",cascade = CascadeType.MERGE)
     private Set<WaitingList>waitingLists=new HashSet<>();

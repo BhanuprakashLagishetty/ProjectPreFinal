@@ -5,7 +5,9 @@ import com.example.BookTicket.Entity.Stations;
 import com.example.BookTicket.Models.SeatsModel;
 import com.example.BookTicket.Models.TrainModel;
 import com.example.BookTicket.Service.AdminService;
+import com.example.BookTicket.validator.StationsValidator;
 import com.example.BookTicket.validator.TrainValidator;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,10 +26,12 @@ public class AdminController {
     @Autowired
     private TrainValidator trainValidator;
 
+    @Autowired
+    private StationsValidator stationsValidator;
+
     @RequestMapping("/saveTrain")
     public String saveTrain()
     {
-
         return "addTrain";
     }
     @RequestMapping("/addTrain")
@@ -71,9 +75,13 @@ public class AdminController {
         return "redirect:/DisplayadminTrainTickets?trainId="+ g_TrainId;
     }
     @RequestMapping("/AddingStationsToTrain")
-    public Object AddingStationsToTrain (Stations stations)
+    public Object AddingStationsToTrain (@Valid @ModelAttribute("stations")Stations stations, BindingResult bindingResult)
     {
-
+        stationsValidator.validate(stations,bindingResult);
+        if(bindingResult.hasErrors())
+        {
+            return "AddStations";
+        }
         adminService.addingStationsToTrain(g_TrainId,stations);
         return "redirect:/DisplayIntermediateStations?trainId="+ g_TrainId;
     }
@@ -90,7 +98,6 @@ public class AdminController {
     public String DisplayIntermediateStations(Model model,Long trainId)
     {
         g_TrainId =trainId;
-
         Set<Stations>stations=adminService.DisplayIntermediateStations(g_TrainId);
         model.addAttribute("stations",stations);
         return "DisplayStations";

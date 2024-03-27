@@ -92,7 +92,6 @@ public class UserController {
     @RequestMapping("/findTrains")
     public String findTrains(@Valid @ModelAttribute("SearchTrainModel")SearchTrainModel searchTrainModel,Model model,BindingResult bindingResult)
     {
-        System.out.println(searchTrainModel.getBookingDate());
         searchTrainValidator.validate(searchTrainModel,bindingResult);
         if(bindingResult.hasErrors())
         {
@@ -100,9 +99,9 @@ public class UserController {
         }
 
 
-        if(!userService.validateBookingDate(searchTrainModel.getBookingDate())){
-            return "BookedDateError";
-        }
+//        if(!userService.validateBookingDate(searchTrainModel.getBookingDate())){
+//            return "BookedDateError";
+//        }
         List<TrainModel> trainModelList =userService.displayTrainOnLocations(searchTrainModel.getArrivalStation(),searchTrainModel.getDepartureStation(),searchTrainModel.getBookingDate());
         if(!trainModelList.isEmpty())
         {

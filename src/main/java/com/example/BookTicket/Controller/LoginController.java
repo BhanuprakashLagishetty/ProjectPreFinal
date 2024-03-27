@@ -17,7 +17,7 @@ public class LoginController {
         @RequestMapping("/")
         public String home()
         {
-            return "home";
+                return "home";
         }
         @RequestMapping("/UserLogin")
         public String userLogin()

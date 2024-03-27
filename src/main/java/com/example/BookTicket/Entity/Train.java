@@ -44,6 +44,9 @@ public class Train {
     private Set<Seat> seats= new HashSet<>();
     private int availableSeats;
 
+    @OneToMany(mappedBy = "train", cascade = CascadeType.MERGE)
+    private Set<Booking>bookings = new HashSet<>();
+
     @OneToMany(mappedBy = "train",cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Stations>stations= new HashSet<>();

@@ -16,12 +16,9 @@ public class UserValidator implements Validator {
     public void validate(Object target, Errors errors) {
         UserModel userModel = (UserModel) target;
 
-        if (userModel.getUserName().isBlank()) {
-            System.out.println("This is bhanuprakash");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"userName","userName");
 
-                errors.rejectValue("userName", "userName","username should not be null");
-
-        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"age","age");
         if(userModel.getAge()<18)
         {
             errors.rejectValue("age", "age","age should be greater than 18");

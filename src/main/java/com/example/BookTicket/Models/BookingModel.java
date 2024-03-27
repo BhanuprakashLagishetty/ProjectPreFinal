@@ -26,6 +26,7 @@ public class BookingModel {
     private LocalDate BookedDate;
     private String bookingType;
     private String result;
+    private Train train;
     private Payment payment;
     private Set<Seat>seats = new HashSet<>();
     private Set<WaitingList>waitingLists=new HashSet<>();
