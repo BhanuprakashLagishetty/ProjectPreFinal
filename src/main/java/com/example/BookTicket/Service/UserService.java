@@ -88,21 +88,9 @@ public class UserService implements UserServiceInterface {
               train.getBookings().forEach(booking -> heighestuser.put(booking.getUser(),heighestuser.getOrDefault(booking.getUser(),0)+booking.getNumerOfSeats()));
               int maxnum=heighestuser.values().stream().max(Integer::compareTo).orElse(0);
               List<User>users=heighestuser.keySet().stream().filter(key->heighestuser.get(key)==maxnum).collect(Collectors.toList());
-        int count=0;
-        for(User user :users)
-        {
-            for(Booking booking:user.getBooking())
-            {
-                count+=booking.getNumerOfSeats();
-                System.out.println("Booked date is"+booking.getBookedDate());
-                System.out.println("Booked number of seats"+b);
-            }
-            System.out.println("username is:  "+user.getUsername() +"train name is"+train.getName()+ "arival time is"+train.getArrivalStation()+" destination time is"+train.getDepartureStation()+ "arrival time is"+train.getArrivalTime()+" departure time is"+train.getDepartureTime()+"Booked seat is"+ count +"Booked times"+user.getBooking().size());
-
-        }
-             int cout=0;
-
-
+              users.forEach(user->{
+                  System.out.println("User name is: "+user.getUsername()+" Train name is: "+train.getName());
+              });
 
     }
     @Override
